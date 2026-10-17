@@ -1,4 +1,5 @@
 const gameBoard = document.getElementById("gameBoard");
+const paddle = document.getElementById("paddle");
 const bricksContainer = document.getElementById("bricksContainer");
 
 const rows = 3;
@@ -6,7 +7,11 @@ const cols = 5;
 let totalBricks = rows * cols;
 let brickElements = [];
 
-// DOM Manipulation: Dynamically create brick nodes
+let paddleX = 200;
+const paddleSpeed = 6;
+let rightPressed = false;
+let leftPressed = false;
+
 function createBricks() {
     bricksContainer.innerHTML = "";
     brickElements = [];
@@ -25,4 +30,31 @@ function createBricks() {
 }
 
 createBricks();
-console.log("Fase 2 completada: Ladrillos generados en el DOM.");
+
+// Event Listeners for Keyboard
+document.addEventListener("keydown", keyDownHandler);
+document.addEventListener("keyup", keyUpHandler);
+
+function keyDownHandler(e) {
+    if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") rightPressed = true;
+    if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") leftPressed = true;
+}
+
+function keyUpHandler(e) {
+    if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") rightPressed = false;
+    if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") leftPressed = false;
+}
+
+// Simple loop to test paddle movement
+function update() {
+    if (rightPressed && paddleX < gameBoard.clientWidth - paddle.clientWidth) {
+        paddleX += paddleSpeed;
+    } else if (leftPressed && paddleX > 0) {
+        paddleX -= paddleSpeed;
+    }
+    paddle.style.left = paddleX + "px";
+
+    requestAnimationFrame(update);
+}
+
+update();
